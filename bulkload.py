@@ -1,23 +1,23 @@
 import json
 
 # business
-# input_file = "yelp_academic_dataset_business.json"
-# output_file = "yelp_academic_dataset_business.dat"
-#
-# with open(input_file, "r", encoding="utf-8") as f:
-#     data = [json.loads(line) for line in f]
-#
-#
-# fields = [
-#     "business_id", "name", "address", "city", "state",
-#     "postal_code", "latitude", "longitude", "stars",
-#     "review_count", "is_open"
-# ]
-#
-# with open(output_file, "w", encoding="utf-8") as f:
-#     for item in data:
-#         row = "|".join([str(item.get(field, "")).replace('®', '').replace('|', ' ') for field in fields])
-#         f.write(row + "\n")
+input_file = "yelp_academic_dataset_business.json"
+output_file = "yelp_academic_dataset_business.dat"
+
+with open(input_file, "r", encoding="utf-8") as f:
+    data = [json.loads(line) for line in f]
+
+
+fields = [
+    "business_id", "name", "address", "city", "state",
+    "postal_code", "latitude", "longitude", "stars",
+    "review_count", "is_open"
+]
+
+with open(output_file, "w", encoding="utf-8") as f:
+    for item in data:
+        row = "|".join([str(item.get(field, "")).replace('®', '').replace('|', ' ') for field in fields])
+        f.write(row + "\n")
 
 
 # review

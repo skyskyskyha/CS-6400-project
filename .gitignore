@@ -1,0 +1,5 @@
+*.pdf
+*.docx
+*.dat
+*.json
+.idea/
