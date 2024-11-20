@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS user;
 CREATE TABLE user (
     user_id CHAR(22) PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -21,6 +22,8 @@ CREATE TABLE user (
     compliment_photos INT NOT NULL
 );
 
+DROP TABLE IF EXISTS business;
+
 CREATE TABLE business (
     business_id CHAR(22) PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -35,6 +38,9 @@ CREATE TABLE business (
     is_open TINYINT NOT NULL
 );
 
+DROP TABLE IF EXISTS review;
+
+
 CREATE TABLE review (
     review_id CHAR(22) PRIMARY KEY,
     user_id CHAR(22) NOT NULL,
@@ -44,10 +50,9 @@ CREATE TABLE review (
     text TEXT NOT NULL,
     useful INT DEFAULT 0,
     funny INT DEFAULT 0,
-    cool INT DEFAULT 0,
-    FOREIGN KEY (user_id) REFERENCES user(user_id),
-    FOREIGN KEY (business_id) REFERENCES business(business_id)
+    cool INT DEFAULT 0
 );
+
 
 SHOW VARIABLES LIKE 'secure_file_priv';
 
@@ -76,4 +81,5 @@ IGNORE
 INTO TABLE review
 FIELDS TERMINATED BY '|'
 LINES TERMINATED BY '\n'
-(review_id, user_id, business_id, stars, date, text, useful, funny, cool);
+(review_id, user_id, business_id, stars, date, useful, funny, cool);
+

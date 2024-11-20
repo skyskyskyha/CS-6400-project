@@ -28,7 +28,9 @@ with open(review_input_file, "r", encoding="utf-8") as f:
 
 review_fields = [
     "review_id", "user_id", "business_id", "stars",
-    "date", "text", "useful", "funny", "cool"
+    "date",
+    # "text",
+    "useful", "funny", "cool"
 ]
 
 with open(review_output_file, "w", encoding="utf-8") as f:
