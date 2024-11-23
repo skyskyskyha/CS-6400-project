@@ -1,0 +1,58 @@
+Business {
+        string business_id PK
+        string name
+        string address
+        string city
+        string state
+        string postal_code
+        float latitude
+        float longitude
+        float stars
+        int review_count
+        boolean is_open
+        string hours_monday
+        string hours_tuesday
+        string hours_wednesday
+        string hours_thursday
+        string hours_friday
+        string hours_saturday
+        string hours_sunday
+    }
+
+    User {
+        string user_id PK
+        string name
+        int review_count
+        string yelping_since
+        float average_stars
+        int fans
+        array elite_years
+        int compliment_hot
+        int compliment_more
+        int compliment_profile
+        int compliment_cute
+        int compliment_list
+        int compliment_note
+        int compliment_plain
+        int compliment_cool
+        int compliment_funny
+        int compliment_writer
+        int compliment_photos
+    }
+
+    Tip {
+        string text
+        date date
+        int compliment_count
+        string user_id FK
+        string business_id FK
+    }
+
+    Category {
+        string name PK
+    }
+
+    Business ||--o{ Category : "IN_CATEGORY"
+    Business ||--o{ Tip : "ABOUT"
+    User ||--o{ Tip : "WROTE_TIP"
+    User ||--o{ User : "FRIENDS_WITH"
