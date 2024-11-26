@@ -55,6 +55,8 @@ user_fields = [
 ]
 
 with open(user_output_file, "w", encoding="utf-8") as f:
+
     for item in user_data:
+        print(len(item["friend"]))
         row = "|".join([str(item.get(field, "")).replace('|', ' ') for field in user_fields])
         f.write(row + "\n")

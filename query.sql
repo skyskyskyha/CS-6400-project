@@ -4,7 +4,7 @@ SELECT
 FROM
     business
 WHERE
-    city = 'St Louis'
+    city = 'Atlanta'
 ORDER BY
     stars DESC;
 
