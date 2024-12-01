@@ -1,4 +1,3 @@
-
 import json
 import logging
 import time
@@ -73,9 +72,9 @@ def main():
     loader = MongoDBLoader(MONGODB_URI, DB_NAME, BATCH_SIZE)
 
     files = {
-        'business': '/Users/puxuanwang/Downloads/yelp_dataset/yelp_academic_dataset_business.json',
-        'review': '/Users/puxuanwang/Downloads/yelp_dataset/yelp_academic_dataset_review.json',
-        'user': '/Users/puxuanwang/Downloads/yelp_dataset/yelp_academic_dataset_user.json'
+        'business': '/Users/puxuanwang/Downloads/yelp_dataset/reduced_businesses.json',
+        'tip': '/Users/puxuanwang/Downloads/yelp_dataset/reduced_tips.json',
+        'user': '/Users/puxuanwang/Downloads/yelp_dataset/reduced_users.json'
     }
 
     for collection_name, file_path in files.items():
