@@ -122,6 +122,7 @@ def find_user_reviews(user_id):
 
     client.close()
 
+
 def calculate_users_review_count():
     MONGODB_URI = "mongodb://localhost:27017/"
     DB_NAME = "yelp_db"
@@ -161,7 +162,8 @@ def calculate_users_review_count():
     for result in results:
         user_count += 1
         total_reviews += result['review_count']
-        print(f"{result['_id']:<35} {result['review_count']:<12} {result['avg_compliments']:,.2f}           {result['latest_review']}")
+        print(
+            f"{result['_id']:<35} {result['review_count']:<12} {result['avg_compliments']:,.2f}           {result['latest_review']}")
 
         if user_count == 25:
             break
@@ -430,6 +432,7 @@ def find_businesses_with_tip_compliment_percentages():
 
     client.close()
 
+
 def find_top_businesses_in_each_category():
     MONGODB_URI = "mongodb://localhost:27017/"
     DB_NAME = "yelp_db"
@@ -559,6 +562,7 @@ def rank_categories_by_compliments():
 
     client.close()
 
+
 def find_user_tips_per_year_with_elite_status():
     MONGODB_URI = "mongodb://localhost:27017/"
     DB_NAME = "yelp_db"
@@ -633,54 +637,83 @@ def find_user_tips_per_year_with_elite_status():
     client.close()
 
 
-def find_friends_of_friends(user_id):
+def find_friends_of_friends():
     MONGODB_URI = "mongodb://localhost:27017/"
     DB_NAME = "yelp_db"
     COLLECTION_NAME = "user"
 
     client = pymongo.MongoClient(MONGODB_URI)
     db = client[DB_NAME]
-    collection = db[COLLECTION_NAME]
-
-    pipeline = [
-        {"$match": {"user_id": user_id}},
-        {"$lookup": {
-            "from": "user",
-            "localField": "friends",
-            "foreignField": "user_id",
-            "as": "friends_info"
-        }},
-        {"$unwind": "$friends_info"},
-        {"$lookup": {
-            "from": "user",
-            "localField": "friends_info.friends",
-            "foreignField": "user_id",
-            "as": "friends_of_friends_info"
-        }},
-        {"$unwind": "$friends_of_friends_info"},
-        {"$match": {"friends_of_friends_info.user_id": {"$ne": user_id}}},
-        {"$group": {
-            "_id": None,
-            "friends_of_friends": {"$addToSet": "$friends_of_friends_info.user_id"},
-            "friends": {"$first": "$friends"}
-        }},
-        {"$project": {
-            "friends_of_friends": {
-                "$setDifference": ["$friends_of_friends", "$friends"]
-            }
-        }}
-    ]
+    user_collection = db[COLLECTION_NAME]
 
     start_time = time.time()
-    result = collection.aggregate(pipeline)
-    query_time = time.time() - start_time
 
-    friends_of_friends = next(result, {}).get("friends_of_friends", [])
-    print(f"Friends of friends for user {user_id} (excluding direct friends):")
-    for friend in friends_of_friends:
-        print(friend)
+    pipeline = [
+        {
+            "$match": {
+                "user_id": {"$regex": "^A"}
+            }
+        },
+        {
+            "$lookup": {
+                "from": "user",
+                "localField": "friends",
+                "foreignField": "user_id",
+                "as": "direct_friends"
+            }
+        },
+        {"$unwind": "$direct_friends"},
+        {
+            "$lookup": {
+                "from": "user",
+                "localField": "direct_friends.friends",
+                "foreignField": "user_id",
+                "as": "friends_of_friends"
+            }
+        },
+        {"$unwind": "$friends_of_friends"},
+        {
+            "$group": {
+                "_id": "$user_id",
+                "direct_friends": {"$addToSet": "$direct_friends.user_id"},
+                "potential_fof": {"$addToSet": "$friends_of_friends.user_id"}
+            }
+        },
+        {"$sort": {"_id": 1}}
+    ]
 
-    print(f"Query time: {query_time:.4f} seconds")
+    results = user_collection.aggregate(pipeline)
+
+    processed_results = []
+    for result in results:
+        user_id = result["_id"]
+        direct_friends = set(result["direct_friends"])
+        all_fof = set(result["potential_fof"])
+
+        valid_fof = all_fof - direct_friends - {user_id}
+
+        processed_results.append({
+            "PersonID": user_id,
+            "FriendsOfFriends": sorted(list(valid_fof))
+        })
+
+    end_time = time.time()
+    query_time = end_time - start_time
+
+    print(f"Friends of Friends Analysis for Users Starting with 'A':")
+    print("-" * 80)
+
+    for result in processed_results:
+        print(f"\nUser: {result['PersonID']}")
+        print(f"Friends of Friends ({len(result['FriendsOfFriends'])}): "
+              f"{', '.join(result['FriendsOfFriends'][:5])}..."
+              if len(result['FriendsOfFriends']) > 5 else
+              f"{', '.join(result['FriendsOfFriends'])}")
+
+    print(f"\nTotal time: {query_time:.2f} seconds")
+    print(f"Total users processed: {len(processed_results)}")
+
+    client.close()
 
 
 if __name__ == '__main__':
@@ -696,4 +729,4 @@ if __name__ == '__main__':
     find_top_businesses_in_each_category()
     rank_categories_by_compliments()
     find_user_tips_per_year_with_elite_status()
-    find_friends_of_friends("__-YOsZp7ilfYVwD8Wdszg")
+    find_friends_of_friends()
