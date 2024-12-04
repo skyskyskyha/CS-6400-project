@@ -1,4 +1,4 @@
-#CS 6400 project group 13
+# CS 6400 project group 13
 
 
 
@@ -35,3 +35,8 @@ SOURCE mysql_bulkload.sql;
 - `neo4jUtils.py`: Utility functions for Neo4j operations.
 
 
+### Slide
+- https://docs.google.com/presentation/d/1Dc_ngkzWde_cgbo4Q4-RZtajtEnEDjD0yA4CKbBmGsc/edit#slide=id.g31a96d1b912_0_0
+
+### Document
+- https://docs.google.com/document/d/1NJ4bZ0tosEDycj4DykT6yFxT9cvd_DO3KLIsinYfl2k/edit?tab=t.0
