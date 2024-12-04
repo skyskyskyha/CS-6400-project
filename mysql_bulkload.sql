@@ -139,7 +139,7 @@ INTO TABLE Friends
 FIELDS TERMINATED BY '|'
 LINES TERMINATED BY '\n'
 (user_id, friend_id);
-
+# select count(*) from friends;
 
 
 #1 Find top-rated (star) restaurant in Nashville
@@ -157,7 +157,7 @@ GROUP BY city;
 #3 Find a user's all review
 SELECT Tip.*
 FROM Tip
-WHERE user_id = '___6aix-XvFcQz3GauAPpw';
+WHERE user_id = 'ximBNBichf7e8cABAd480A';
 
 #4 Calculate users' review by number
 SELECT user_id, COUNT(*) AS review_count
@@ -194,7 +194,7 @@ SELECT b.business_id, b.name,
 FROM Business b
 JOIN Tip t ON b.business_id = t.business_id
 GROUP BY b.business_id, b.name
-HAVING COUNT(*) >= 50;
+HAVING COUNT(*) >= 5;
 
 #9 Identify the top 5 businesses in each category ranked by the total count of compliments
 SELECT c.category, t.business_id, b.name, SUM(t.compliment_count) AS total_compliments
@@ -213,22 +213,70 @@ GROUP BY c.category
 ORDER BY total_compliments DESC;
 
 #11 Number of tips the user writes in each year with elite status
-SELECT u.user_id, YEAR(t.date) AS year, COUNT(*) AS tip_count, u.elite
+SELECT u.user_id, YEAR(t.date) AS year, COUNT(*) AS tip_count
 FROM Tip t
 JOIN User u ON t.user_id = u.user_id
-GROUP BY u.user_id, YEAR(t.date), u.elite;
+GROUP BY u.user_id, YEAR(t.date);
 
 #12 Find a person’s friends’ friends but not the person’s friends
 SELECT DISTINCT f2.friend_id
 FROM Friends f1
 JOIN Friends f2 ON f1.friend_id = f2.user_id
-WHERE f1.user_id = 'USER_ID'
-  AND f2.friend_id NOT IN (SELECT friend_id FROM Friends WHERE user_id = '__-YOsZp7ilfYVwD8Wdszg');
+WHERE f2.friend_id = 'MfAo-QPgFrcziuygx27K5w'
+   AND f2.friend_id NOT IN (SELECT friend_id FROM Friends WHERE user_id = 'MfAo-QPgFrcziuygx27K5w');
+
+select * from friends
+where friend_id in
+      (select friend_id from friends where user_id = 'MfAo-QPgFrcziuygx27K5w');
 
 SELECT *
-from friends
-where user_id="KT-Ft32ObIh7J_h_kEdh1g"
+FROM friends
+WHERE friend_id IN (
+    SELECT friend_id
+    FROM friends
+    WHERE user_id LIKE 'A%'
+);
 
-SELECT COUNT(*)
-FROM friends;
+DELIMITER //
 
+CREATE TEMPORARY TABLE temp_results (
+    user_id VARCHAR(255),
+    friend_id VARCHAR(255)
+);
+DROP PROCEDURE IF EXISTS GetFriendsOfFriends;
+
+CREATE PROCEDURE GetFriendsOfFriends()
+BEGIN
+    DECLARE done INT DEFAULT FALSE;
+    DECLARE current_user_id VARCHAR(255);
+    DECLARE cur CURSOR FOR
+        SELECT DISTINCT user_id
+        FROM friends
+        WHERE user_id LIKE 'A%';
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+    OPEN cur;
+
+    read_loop: LOOP
+        FETCH cur INTO current_user_id;
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+
+        INSERT INTO temp_results (user_id, friend_id)
+#         SELECT DISTINCT f1.user_id, f2.friend_id
+#         FROM friends f1
+#         JOIN friends f2 ON f1.friend_id = f2.user_id
+#         WHERE f1.user_id = current_user_id;
+        SELECT DISTINCT f1.user_id, f2.friend_id
+        FROM Friends f1
+        JOIN Friends f2 ON f1.friend_id = f2.user_id
+        WHERE f2.friend_id = current_user_id;
+    END LOOP;
+
+    CLOSE cur;
+END //
+
+DELIMITER ;
+CALL GetFriendsOfFriends();
+SELECT * FROM temp_results;
