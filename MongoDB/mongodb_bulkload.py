@@ -72,9 +72,9 @@ def main():
     loader = MongoDBLoader(MONGODB_URI, DB_NAME, BATCH_SIZE)
 
     files = {
-        'business': '/Users/puxuanwang/Downloads/yelp_dataset/reduced_businesses.json',
-        'tip': '/Users/puxuanwang/Downloads/yelp_dataset/reduced_tips.json',
-        'user': '/Users/puxuanwang/Downloads/yelp_dataset/reduced_users.json'
+        'business': '/Users/puxuanwang/Downloads/reduced_datasets/set3_businesses.json',
+        'tip': '/Users/puxuanwang/Downloads/reduced_datasets/set3_tips.json',
+        'user': '/Users/puxuanwang/Downloads/reduced_datasets/set3_users.json'
     }
 
     for collection_name, file_path in files.items():
@@ -92,24 +92,20 @@ def main():
 if __name__ == "__main__":
     main()
 
-# 2024-11-16 20:45:57,139 - business: Completed 150,346 documents in 3.41 seconds (44038.31 documents/second)
-#
 # Summary for business:
-#     Total documents: 150,346
-# Total time: 3.41 seconds
-# Average speed: 44035.50 documents/second
+#     Total documents: 20,000
+# Total time: 0.52 seconds
+# Average speed: 38645.78 documents/second
 # --------------------------------------------------
 #
-# Summary for review:
-#     Total documents: 6,990,280
-# Total time: 114.18 seconds
-# Average speed: 61224.09 documents/second
+# Summary for tip:
+#     Total documents: 40,000
+# Total time: 0.37 seconds
+# Average speed: 108320.61 documents/second
 # --------------------------------------------------
-# 2024-11-16 20:47:51,313 - review: Completed 6,990,280 documents in 114.17 seconds (61224.87 documents/second)
 #
 # Summary for user:
-#     Total documents: 1,987,897
-# Total time: 57.18 seconds
-# Average speed: 34767.24 documents/second
+#     Total documents: 100,000
+# Total time: 16.39 seconds
+# Average speed: 6101.49 documents/second
 # --------------------------------------------------
-# 2024-11-16 20:48:48,492 - user: Completed 1,987,897 documents in 57.18 seconds (34767.50 documents/second)
