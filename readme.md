@@ -32,6 +32,10 @@ SOURCE mysql_bulkload.sql;
 - `Neo4jER.txt`: Description of the entity-relationship model for Neo4j.
 - `neo4j.ipynb`: Jupyter Notebook for Neo4j operations.
 - `neo4jUtils.py`: Utility functions for Neo4j operations.
+#### How to execute `neo4j.ipynb`
+- Download Neo4j Desktop and start a neo4j database with default config (my version is 5.24.0), set your own password
+- Go into the jupyter notebook and change the config cell, including the password field to the password set above
+- Execute each cell, which contains bulkload and query to view the query time
 
 
 ### Slide
