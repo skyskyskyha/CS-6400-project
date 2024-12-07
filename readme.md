@@ -21,13 +21,13 @@
 - `datasetUtils.py`: Utility functions for dataset operations.
 
 ## Running the project
-- We have 3 databases and their corresponding data for running
+- We have 3 databases and their corresponding scripts for running
 ### MongoDB/
 - `mongo_query.py`: Script for executing MongoDB queries.
 - `mongodb_bulkload.py`: Script for bulk loading data into MongoDB.
 
 ### MySQL/
-- `mysql_bulkload.ipynb`: Jupyter Notebook f bulk loading into MySQL.
+- `mysql_bulkload.ipynb`: Jupyter Notebook for bulk loading into MySQL.
 - `mysql_bulkload_and_query.sql`: SQL script for bulk loading into MySQL and running queries.
 
 - setup and benchmark for mysql (innodb):
