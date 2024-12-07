@@ -29,7 +29,6 @@ SOURCE mysql_bulkload.sql;
 \T
 ```
 ### Neo4j/
-- `GenerateDataset.py`: Script to generate datasets for Neo4j.
 - `Neo4jER.txt`: Description of the entity-relationship model for Neo4j.
 - `neo4j.ipynb`: Jupyter Notebook for Neo4j operations.
 - `neo4jUtils.py`: Utility functions for Neo4j operations.
